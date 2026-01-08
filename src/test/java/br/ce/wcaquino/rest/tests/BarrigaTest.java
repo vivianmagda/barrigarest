@@ -3,12 +3,15 @@
 import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.*;
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
+
 import br.ce.wcaquino.rest.core.BaseTest;
 import java.util.HashMap;
 import java.util.Map;
 
-
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class BarrigaTest extends BaseTest {
 
     private String TOKEN;
@@ -29,7 +32,7 @@ public class BarrigaTest extends BaseTest {
     }
 
     @Test
-    public void naoDeveAcessarAPISemToken() {
+    public void t01_naoDeveAcessarAPISemToken() {
         given()
         .when()
             .get("/contas")
@@ -38,7 +41,7 @@ public class BarrigaTest extends BaseTest {
     }
 
     @Test
-    public void deveIncluirContaComSucesso(){    
+    public void t02_deveIncluirContaComSucesso(){    
             given()
                 .header("Authorization", "JWT " + TOKEN) //API mais recente seria bearer
                 .body("{\"nome\": \"conta qualquer\"}")
@@ -50,7 +53,7 @@ public class BarrigaTest extends BaseTest {
     }
 
     @Test
-    public void deveAlterarContaComSucesso(){    
+    public void t03_deveAlterarContaComSucesso(){    
             given()
                 .header("Authorization", "JWT " + TOKEN)
                 .body("{\"nome\": \"conta alterada\"}")
@@ -63,7 +66,7 @@ public class BarrigaTest extends BaseTest {
     }
 
     @Test
-    public void naoDeveIncluirContaComNomeRepetido(){    
+    public void t04_naoDeveIncluirContaComNomeRepetido(){    
             given()
                 .header("Authorization", "JWT " + TOKEN)
                 .body("{\"nome\": \"conta alterada\"}")
@@ -76,7 +79,7 @@ public class BarrigaTest extends BaseTest {
     }
 
     @Test
-    public void deveInserirMovimentacaoComSucesso(){    
+    public void t05_deveInserirMovimentacaoComSucesso(){    
         Movimentacao mov = getMovimentacaoValida();
 
             given()
@@ -90,7 +93,7 @@ public class BarrigaTest extends BaseTest {
     }
 
     @Test
-    public void deveValidarCamposObrigatoriosNaMovimentacao(){    
+    public void t06_deveValidarCamposObrigatoriosNaMovimentacao(){    
         given()
             .header("Authorization", "JWT " + TOKEN)
             .body("{}")
@@ -113,7 +116,7 @@ public class BarrigaTest extends BaseTest {
     }
 
     @Test
-    public void naoDeveCadastrarMovimentacaoFutura(){    
+    public void t07_naoDeveCadastrarMovimentacaoFutura(){    
         Movimentacao mov = getMovimentacaoValida();
         mov.setData_transacao("01/12/2026");
 
@@ -130,7 +133,7 @@ public class BarrigaTest extends BaseTest {
     }
 
      @Test
-    public void naoDeveRemoverContaComMovimentacao(){ 
+    public void t08_naoDeveRemoverContaComMovimentacao(){ 
             given()
                 .header("Authorization", "JWT " + TOKEN)
             .when()
@@ -142,7 +145,7 @@ public class BarrigaTest extends BaseTest {
     }
 
      @Test
-    public void deveCalcularSaldoContas(){ 
+    public void t09_deveCalcularSaldoContas(){ 
             given()
                 .header("Authorization", "JWT " + TOKEN)
             .when()
@@ -155,7 +158,7 @@ public class BarrigaTest extends BaseTest {
 
     //2403491 mov a excluir
      @Test
-    public void deveRemoverMovimentacao(){ 
+    public void t10_deveRemoverMovimentacao(){ 
             given()
                 .header("Authorization", "JWT " + TOKEN)
             .when()
@@ -164,9 +167,7 @@ public class BarrigaTest extends BaseTest {
                 .statusCode(204)
             ;
     }
-
-
-
+    
 
     private Movimentacao getMovimentacaoValida(){
         Movimentacao mov = new Movimentacao();
